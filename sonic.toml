@@ -1,0 +1,27 @@
+[default]
+
+[gateway]
+addr = ":7777"
+
+[auth]
+addr = ":7778"
+
+[auth.jwt]
+algorithm = "HS256"
+timeout = 1800
+key = "eewjdjfdfijdfldfdlfdlfmdlmferieireorealdkfdkdfjfj"
+
+[logic]
+addr = ":7779"
+
+[mq]
+addr = ["127.0.0.1:1010"]
+
+[cache]
+addr = ""
+
+[storage]
+max_idle = 20
+max_open = 20
+debug = true
+addr = "root:1234567890!23@tcp(127.0.0.1:3306)/sonic?charset=utf8&interpolateParams=true"

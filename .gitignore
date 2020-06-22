@@ -1,0 +1,7 @@
+/cambrian
+
+*.out
+*.pid
+*.log
+log/
+.idea/
