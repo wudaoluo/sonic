@@ -13,6 +13,7 @@ func AuthV1Router(parentRoute gin.IRouter) {
 	end := NewAuth()
 	router.POST("/login",middleware.Jwt(),end.Login)
 	router.POST("/logout",end.Logout)
+	router.POST("/token/refresh",end.TokenRefresh)
 }
 
 type auth struct {
@@ -42,4 +43,19 @@ func (a *auth) Login(c *gin.Context) {
 
 func (a auth) Logout(c *gin.Context) {
 
+}
+
+func (a auth) TokenRefresh(c *gin.Context) {
+	var req model.AuthTokenRefresh
+	if err := c.Bind(&req); err != nil {
+		common.GinJsonRespErr(c,common.PARAM_ERROR)
+		return
+	}
+
+	ret,err := a.service.TokenRefresh(&req)
+	if err != nil {
+		common.GinJsonRespErr(c,err)
+		return
+	}
+	common.GinJsonResp(c,ret)
 }

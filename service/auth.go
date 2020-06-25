@@ -30,20 +30,38 @@ func (a AuthService) Login(reqData *model.AuthLogin) (interface{},error) {
 	}
 
 	if imUser.Password != reqData.Password {
-		golog.Error("Login","func","imUser.Password != reqData.Password","err",common.AUTH_ERR)
-		return nil, common.AUTH_ERR
+		golog.Error("Login","func","imUser.Password != reqData.Password","err",common.AUTH_ERROR)
+		return nil, common.AUTH_ERROR
 	}
 
 	//jwt
-	token,err := middleware.TokenGenerator(imUser)
+	jwtToken := middleware.JwtToken{}
+	err = jwtToken.Gen(imUser)
 	if err != nil {
-		golog.Error("Login","func","middleware.TokenGenerator","err",err)
+		golog.Error("Login","func","jwtToken.Gen","err",err)
 		return nil, common.SERVICE_ERROR
 	}
 
-	return token,nil
+	return jwtToken,nil
 }
 
 func (a AuthService) Logout(reqData interface{}) (interface{},error) {
 	return nil, nil
+}
+
+func (a AuthService) TokenRefresh(reqData *model.AuthTokenRefresh) (interface{},error) {
+	imUser,err := middleware.ParseToken(reqData.TokenRefresh,true)
+	if err != nil {
+		golog.Error("TokenRefresh","func","middleware.ParseToken","err",err)
+		return nil, err
+	}
+	jwtToken := middleware.JwtToken{}
+	err = jwtToken.Gen(imUser)
+	if err != nil {
+		golog.Error("TokenRefresh","func","jwtToken.Gen","err",err)
+		return nil, common.SERVICE_ERROR
+	}
+
+	return jwtToken,nil
+
 }
