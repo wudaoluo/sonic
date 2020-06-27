@@ -6,7 +6,7 @@ type Config struct {
 	Default ConfigDefault
 	Gateway ConfigGateway
 	Auth ConfigAuth
-	MQ ConfigMQ
+	Queue ConfigQueue
 	Cache ConfigCache
 	Storage ConfigStorage
 }
@@ -29,8 +29,9 @@ type ConfigAuthJwt struct {
 	Key string
 }
 
-type ConfigMQ struct {
-
+type ConfigQueue struct {
+	Type string `json:"type"`
+	Addrs []string `json:"addrs"`
 }
 
 type ConfigCache struct {

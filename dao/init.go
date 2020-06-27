@@ -11,7 +11,7 @@ import (
 var db *sql.DB
 
 
-func InitDB() {
+func Init() {
 	var buf bytes.Buffer
 	var err error
 

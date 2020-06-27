@@ -13,6 +13,8 @@ var (
 	SERVICE_ERROR = errors.New("服务器错误")
 	AUTH_ERROR = errors.New("认证失败")
 	TOKEN_INVALID =  errors.New("token is invalid")
+	COMMAND_INVALID = errors.New("invalid Command")
+	COMMAND_NIL = errors.New("command is nil")
 	//PARAM_ERROR = engine.NewResponseError(ERROR_PARAM_ERROR, "param is error")
 	//MYSQL_PARAM_ERROR = engine.NewResponseError(ERROR_PARAM_ERROR, "sql param is error")
 )

@@ -20,6 +20,7 @@ import (
   "github.com/spf13/cobra"
   "github.com/wudaoluo/sonic/common"
   "github.com/wudaoluo/sonic/dao"
+  "github.com/wudaoluo/sonic/queue"
   "os"
 
   "github.com/spf13/viper"
@@ -55,7 +56,8 @@ func Execute() {
 
 func init() {
   cobra.OnInitialize(initConfig)  //永远在顶层
-  cobra.OnInitialize(dao.InitDB)
+  cobra.OnInitialize(dao.Init)
+  cobra.OnInitialize(queue.Init)
 
   // Here you will define your flags and configuration settings.
   // Cobra supports persistent flags, which, if defined here,

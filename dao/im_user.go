@@ -2,10 +2,6 @@ package dao
 
 import "github.com/wudaoluo/sonic/model"
 
-//
-
-
-
 
 type ImUserService struct {}
 
@@ -17,7 +13,7 @@ func init() {
 
 
 func (t *ImUserService) SelectByUserName(username string) (*model.ImUser,error) {
-    sqlText := "SELECT  avatar,email,password,uid,username FROM IM_USER WHERE username = ? limit 1"
+    sqlText := "SELECT  avatar,email,password,uid,username FROM im_user WHERE username = ? limit 1"
     row := db.QueryRow(sqlText,username)
 
     msg := new(model.ImUser)
@@ -41,12 +37,10 @@ func (t *ImUserService) Select() ([]*model.ImUser,error) {
 }
 
 func (t *ImUserService) Insert(msg *model.ImUser) (int64,error) {
-    sqlText := "INSERT INTO IM_USER (  email,  password,  uid,  username) " +
+    sqlText := "INSERT INTO im_user (  email,  password,  uid,  username) " +
         "VALUE (  ?,  ?,  ?,  ?)"
 
     ret, err := db.Exec(sqlText,
-            
-            
             &msg.Email,
             &msg.Password,
             &msg.Uid,
@@ -59,7 +53,7 @@ func (t *ImUserService) Insert(msg *model.ImUser) (int64,error) {
 }
 
 func (t *ImUserService) DeleteById (id int64) error {
-    sqlText := "DELETE FROM IM_USER where id = ?"
+    sqlText := "DELETE FROM im_user where id = ?"
     _, err := db.Exec(sqlText,id)
     return err
 }
