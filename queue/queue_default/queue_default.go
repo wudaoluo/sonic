@@ -1,9 +1,9 @@
 package queue_default
 
 import (
+	"context"
 	"github.com/wudaoluo/sonic/model"
 	"sync/atomic"
-	"context"
 )
 
 type QueueDefault struct {
@@ -50,6 +50,5 @@ func (q *QueueDefault) Producer(ctx context.Context,buf []byte) error {
 	if atomic.LoadInt32(&q.status) == 1 {
 		q.queue <- buf
 	}
-
 	return nil
 }

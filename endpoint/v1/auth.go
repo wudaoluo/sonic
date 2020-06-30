@@ -3,7 +3,6 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/wudaoluo/sonic/common"
-	"github.com/wudaoluo/sonic/middleware"
 	"github.com/wudaoluo/sonic/model"
 	"github.com/wudaoluo/sonic/service"
 )
@@ -11,7 +10,7 @@ import (
 func AuthV1Router(parentRoute gin.IRouter) {
 	router := parentRoute.Group("/auth")
 	end := NewAuth()
-	router.POST("/login",middleware.Jwt(),end.Login)
+	router.POST("/login",end.Login)
 	router.POST("/logout",end.Logout)
 	router.POST("/token/refresh",end.TokenRefresh)
 }

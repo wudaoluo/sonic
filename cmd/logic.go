@@ -16,7 +16,12 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"context"
+	"github.com/gin-gonic/gin"
+	"github.com/wudaoluo/golog"
+	"github.com/wudaoluo/sonic/common"
+	v1 "github.com/wudaoluo/sonic/endpoint/v1"
+	"github.com/wudaoluo/sonic/service"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +37,18 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("logic called")
+		golog.Info("logic service start...")
+		service.NewLogicService().Start(context.Background())
+
+		router := gin.Default()
+
+		v1.LogicV1Router(router)
+
+		err := router.Run(common.GetConf().Logic.Addr)
+		if err != nil {
+			golog.Error("auth service start faild","err",err)
+			panic(err)
+		}
 	},
 }
 

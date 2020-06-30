@@ -8,6 +8,7 @@ import (
 	"github.com/wudaoluo/golog"
 	"github.com/wudaoluo/sonic/common"
 	"github.com/wudaoluo/sonic/model"
+	"net/http"
 	"time"
 )
 /*
@@ -61,10 +62,12 @@ func Jwt() gin.HandlerFunc {
 		user,err := ParseToken(c.GetHeader(TOKEN),false)
 		if err != nil {
 			golog.Error("middleware.jwt","func","parseToken","err",err)
+			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 		c.Set(UID,user.Uid)
 		c.Set(USERNAME,user.Username)
+		c.Next()
 	}
 }
 

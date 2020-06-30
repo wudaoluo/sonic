@@ -6,6 +6,7 @@ type Config struct {
 	Default ConfigDefault
 	Gateway ConfigGateway
 	Auth ConfigAuth
+	Logic ConfigLogic
 	Queue ConfigQueue
 	Cache ConfigCache
 	Storage ConfigStorage
@@ -27,6 +28,10 @@ type ConfigAuthJwt struct {
 	Algorithm string
 	Timeout time.Duration
 	Key string
+}
+
+type ConfigLogic struct {
+	Addr string
 }
 
 type ConfigQueue struct {
