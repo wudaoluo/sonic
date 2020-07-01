@@ -11,35 +11,28 @@ func LogicV1Router(parentRoute gin.IRouter) {
 	router := parentRoute.Group("/logic")
 	router.Use(middleware.Jwt())
 	end := NewLogic()
-	router.POST("/command",end.Command)
+	router.POST("/command", end.Command)
 }
 
 type logic struct {
 }
 
 func NewLogic() *logic {
-	return &logic{
-	}
+	return &logic{}
 }
 
 //用来模拟的接口
 func (l logic) Command(c *gin.Context) {
-	buf,err := c.GetRawData()
+	buf, err := c.GetRawData()
 	if err != nil {
-		common.GinJsonRespErr(c,common.PARAM_ERROR)
+		common.GinJsonRespErr(c, common.PARAM_ERROR)
 		return
 	}
-	err = queue.Producer(c,buf)
+	err = queue.Producer(c, buf)
 	if err != nil {
-		common.GinJsonRespErr(c,common.SERVICE_ERROR)
+		common.GinJsonRespErr(c, common.SERVICE_ERROR)
 		return
 	}
 
-	//ret,err := common.Cmd.Handle(&common.CmdContext{CmdType: common.MsgReceive, Args: " Post"})
-	//if err != nil {
-	//	common.GinJsonRespErr(c,err)
-	//	return
-	//}
-	common.GinJsonResp(c,true)
+	common.GinJsonResp(c, true)
 }
-

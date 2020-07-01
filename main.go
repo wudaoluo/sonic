@@ -17,8 +17,25 @@ package main
 
 import (
   "github.com/wudaoluo/sonic/cmd"
+  "github.com/wudaoluo/golog"
+  "os"
+  "os/signal"
+  "syscall"
+  "time"
+  "context"
 )
 
 func main() {
   cmd.Execute()
+  _,cancel := context.WithCancel(context.Background())
+  waitSignal(cancel)
+}
+
+
+func waitSignal(cancel context.CancelFunc) {
+  osSignals := make(chan os.Signal, 1)
+  signal.Notify(osSignals, syscall.SIGTERM,syscall.SIGINT)
+  golog.Info("WaitSignal","signal",(<-osSignals).String())
+  cancel()
+  time.Sleep(3*time.Second) //等待程序安全退出
 }

@@ -1,33 +1,28 @@
 package dao
 
 import (
-	"bytes"
-	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/go-xorm/xorm"
 	"github.com/wudaoluo/golog"
 	"github.com/wudaoluo/sonic/common"
 )
 
-var db *sql.DB
-
+var db *xorm.Engine
 
 func Init() {
-	var buf bytes.Buffer
+	storage := common.GetConf().Storage
 	var err error
-
-	golog.Info(buf.String())
-	db, err = sql.Open("mysql", common.GetConf().Storage.Addr)
+	db, err = xorm.NewEngine("mysql", storage.Addr)
 	if err != nil {
-		golog.Fatal("mysql连接失败", "err",err)
+		golog.Fatal("mysql连接失败", "err", err)
+		panic(err)
 	}
 
-	//设置连接池
-	db.SetMaxOpenConns(common.GetConf().Storage.MaxOpen)
-	db.SetMaxIdleConns(common.GetConf().Storage.MaxIdle)
+	db.ShowSQL(storage.Debug)
 
 	err = db.Ping()
 	if err != nil {
-		golog.Fatal("mysql ping失败","err", err)
+		golog.Fatal("mysql ping失败", "err", err)
 	}
 	golog.Info("mysql连接成功")
 
@@ -35,7 +30,8 @@ func Init() {
 
 // DisconnectDB disconnects from the database.
 func DisconnectDB() {
+	golog.Info("DisconnectDB", "func", "关闭mysql数据库")
 	if err := db.Close(); nil != err {
-		golog.Error("Disconnect from database failed: " ,"err", err.Error())
+		golog.Error("Disconnect from database failed: ", "err", err.Error())
 	}
 }

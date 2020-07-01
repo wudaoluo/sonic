@@ -18,16 +18,16 @@ func (c CmdType) String() string {
 }
 
 const (
-	MsgReceive CmdType = iota + 1   //消息接受
-	MsgSend                         //消息发送
-	ContactPersonList              //联系人列表
-	MsgTotalUnRead                 //总未读书
-	MsgUnRead                      //消息未读数
+	MsgReceive        CmdType = iota + 1 //消息接受
+	MsgSend                              //消息发送
+	ContactPersonList                    //联系人列表
+	MsgTotalUnRead                       //总未读书
+	MsgUnRead                            //消息未读数
 
 )
 
-
+//easygen:
 type LogicCommand struct {
-	MsgType CmdType `json:"msg_type"`
-	Data json.RawMessage `json:"data"`
+	MsgCode CmdType         `json:"msg_code"`
+	Data    json.RawMessage `json:"data"`
 }

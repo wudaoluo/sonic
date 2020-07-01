@@ -34,24 +34,16 @@ var authCmd = &cobra.Command{
 
 		v1.AuthV1Router(router)
 
-		err := router.Run(common.GetConf().Auth.Addr)
-		if err != nil {
-			golog.Error("auth service start faild","err",err)
-			panic(err)
-		}
+		go func() {
+			err := router.Run(common.GetConf().Auth.Addr)
+			if err != nil {
+				golog.Error("auth service start faild","err",err)
+				panic(err)
+			}
+		}()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(authCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// authCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// authCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

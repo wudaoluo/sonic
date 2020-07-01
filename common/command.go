@@ -2,6 +2,7 @@ package common
 
 import (
 	"encoding/json"
+
 	"github.com/wudaoluo/golog"
 	"github.com/wudaoluo/sonic/model"
 )
@@ -10,7 +11,7 @@ var Cmd = &CommandHandler{CmdMap: make(map[model.CmdType]Command)}
 
 // 命令接口
 type Command interface {
-	Do(args interface{}) (interface{}, error)
+	Do(args json.RawMessage) (interface{}, error)
 }
 
 // 命令管理者
@@ -25,13 +26,14 @@ func (ch *CommandHandler) Handle(buf []byte) (interface{}, error) {
 	}
 
 	var param model.LogicCommand
-	err := json.Unmarshal(buf,&param)
+	err := json.Unmarshal(buf, &param)
 	if err != nil {
-		golog.Error("Handle","err",err)
+		golog.Error("Handle", "err", err)
 		return nil, err
 	}
 
-	cmd, ok := ch.CmdMap[param.MsgType]
+	golog.Debug("handle", "MsgCode", param.MsgCode, "msg", string(param.Data))
+	cmd, ok := ch.CmdMap[param.MsgCode]
 	if ok {
 		return cmd.Do(param.Data)
 	}
@@ -42,6 +44,3 @@ func (ch *CommandHandler) Handle(buf []byte) (interface{}, error) {
 func (ch *CommandHandler) Register(CmdType model.CmdType, cmd Command) {
 	ch.CmdMap[CmdType] = cmd
 }
-
-
-

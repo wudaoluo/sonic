@@ -44,24 +44,16 @@ to quickly create a Cobra application.`,
 
 		v1.LogicV1Router(router)
 
-		err := router.Run(common.GetConf().Logic.Addr)
-		if err != nil {
-			golog.Error("auth service start faild","err",err)
-			panic(err)
-		}
+		go func() {
+			err := router.Run(common.GetConf().Logic.Addr)
+			if err != nil {
+				golog.Error("auth service start faild","err",err)
+				panic(err)
+			}
+		}()
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(logicCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// logicCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// logicCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

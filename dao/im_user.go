@@ -1,59 +1,36 @@
 package dao
 
-import "github.com/wudaoluo/sonic/model"
+import (
+	"github.com/wudaoluo/golog"
+	"github.com/wudaoluo/sonic/common"
+	"github.com/wudaoluo/sonic/model"
+)
 
-
-type ImUserService struct {}
+type ImUserService struct {
+	table string
+}
 
 var DBImUser *ImUserService
+
 func init() {
-    DBImUser = &ImUserService{}
+	DBImUser = &ImUserService{
+		table: "im_user",
+	}
 }
 
+func (t *ImUserService) SelectByUserName(username string) (*model.ImUser, error) {
+	msg := new(model.ImUser)
+	_, err := db.Table(t.table).Where("username = ?", username).Get(msg)
+	if err != nil {
+		golog.Error("SelectByUserName", "err", err)
+		return nil, err
+	}
 
+	if msg.Uid == 0 {
+		err = common.DB_NOT_FOUND_ERR
+		golog.Error("SelectByUserName", "func", "msg.Uid == 0", "err", err)
+		return nil, err
+	}
 
-func (t *ImUserService) SelectByUserName(username string) (*model.ImUser,error) {
-    sqlText := "SELECT  avatar,email,password,uid,username FROM im_user WHERE username = ? limit 1"
-    row := db.QueryRow(sqlText,username)
-
-    msg := new(model.ImUser)
-    err := row.Scan(
-        &msg.Avatar,
-        &msg.Email,
-        &msg.Password,
-        &msg.Uid,
-        &msg.Username,
-    )
-    if err != nil {
-        return nil,err
-    }
-
-    return msg,nil
-}
-
-
-func (t *ImUserService) Select() ([]*model.ImUser,error) {
-    return nil,nil
-}
-
-func (t *ImUserService) Insert(msg *model.ImUser) (int64,error) {
-    sqlText := "INSERT INTO im_user (  email,  password,  uid,  username) " +
-        "VALUE (  ?,  ?,  ?,  ?)"
-
-    ret, err := db.Exec(sqlText,
-            &msg.Email,
-            &msg.Password,
-            &msg.Uid,
-            &msg.Username,)
-
-    if err != nil {
-        return 0,err
-    }
-    return ret.LastInsertId()
-}
-
-func (t *ImUserService) DeleteById (id int64) error {
-    sqlText := "DELETE FROM im_user where id = ?"
-    _, err := db.Exec(sqlText,id)
-    return err
+	return msg, nil
 }
