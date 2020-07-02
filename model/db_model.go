@@ -79,3 +79,11 @@ type ImUser struct {
 	Uid      int64  `json:"uid" xorm:"not null pk INT"`
 	Username string `json:"username" xorm:"not null VARCHAR(500)"`
 }
+
+type ImMsg struct {
+	Content    string    `json:"content" xorm:"not null VARCHAR(1000)"`
+	CreateTime time.Time `json:"create_time" xorm:"not null TIMESTAMP"`
+	Mid        int64     `json:"mid" xorm:"not null pk autoincr INT"`
+	MsgType    int       `json:"msg_type" xorm:"not null INT"`
+	Type       int       `json:"type" xorm:"not null INT"`
+}

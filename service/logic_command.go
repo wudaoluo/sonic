@@ -18,9 +18,9 @@ func init() {
 
 //easygen:
 type MsgReceive struct {
-	SenderId    int64 `json:"sender_id"`
-	RecipientId int64 `json:"recipient_id"`
-	Mid         int64 `json:"mid"`
+	OwnerUid int64 `json:"owner_uid"`
+	OtherUid int64 `json:"other_uid"`
+	Mid      int64 `json:"mid"`
 }
 
 func (m MsgReceive) Do(args json.RawMessage) (interface{}, error) {
@@ -29,7 +29,37 @@ func (m MsgReceive) Do(args json.RawMessage) (interface{}, error) {
 		golog.Error("MsgReceive.Do", "args", string(args), "err", err)
 		return nil, err
 	}
-	return true, nil
+
+	param := model.ImMsgRelation{
+		Mid:      m.Mid,
+		OwnerUid: m.OwnerUid,
+		OtherUid: m.OtherUid,
+	}
+	data, err := dao.DBImMsgRelation.FindByMid(&param)
+	if err != nil {
+		golog.Error("MsgReceive.Do", "func", "dao.DBImMsgRelation.FindByMid", "err", err)
+		return nil, err
+	}
+
+	check := make(map[int64]int)
+	var mids []int64
+	for _, r := range data {
+		check[r.Mid] = r.Type
+		mids = append(mids, r.Mid)
+	}
+
+	contents, err := dao.DBImMsgContent.FindByMids(mids)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, c := range contents {
+		if v, ok := check[c.Mid]; ok {
+			contents[i].Type = v
+		}
+	}
+
+	return contents, nil
 }
 
 //easygen: json

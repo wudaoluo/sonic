@@ -20,6 +20,7 @@ var (
 
 	DB_NOT_FOUND_ERR = errors.New("db item not found")
 	DB_INSERT_ERR    = errors.New("db insert faild")
+	DB_PARAM_ERROR   = errors.New("db param is error")
 	//PARAM_ERROR = engine.NewResponseError(ERROR_PARAM_ERROR, "param is error")
 	//MYSQL_PARAM_ERROR = engine.NewResponseError(ERROR_PARAM_ERROR, "sql param is error")
 )

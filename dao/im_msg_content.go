@@ -3,6 +3,8 @@ package dao
 import (
 	"time"
 
+	"github.com/wudaoluo/golog"
+
 	"github.com/wudaoluo/sonic/common"
 
 	"github.com/go-xorm/xorm"
@@ -35,4 +37,21 @@ func (t *ImMsgContentService) Insert(data *model.ImMsgContent) (int64, error) {
 	}
 
 	return data.Mid, nil
+}
+
+func (t *ImMsgContentService) FindByMids(mids []int64) ([]*model.ImMsg, error) {
+	var list []*model.ImMsg
+	if len(mids) == 0 {
+		return list, nil
+	}
+
+	err := t.table().In("mid", mids).
+		Cols("mid", "msg_type", "content", "create_time").Find(&list)
+	if err != nil {
+		golog.Error("FindByMids", "mid", mids, "err", err)
+		return nil, err
+	}
+
+	return list, nil
+
 }
